@@ -1,0 +1,122 @@
+---
+title: "Univariate Assignment"
+author: "Daniela Adjunta"
+date: "2/3/2019"
+output: html_document
+---
+
+1. Exploratory analysis: Red maple and Frasier fir
+    subset data 
+    ```{r}
+    fraseri <- trees[trees$species== "Abies fraseri",]
+    rubrum <- trees[trees$species== "Acer rubrum",]
+    ```
+    
+    ```{r}
+   ggplot(data = fraseri, mapping = 
+            aes(x = elev, y = cover)) +
+        geom_point() +
+        geom_smooth('1m') + 
+        labs(x = 'Elevation', y = 'Species Coverage')
+    ```
+    
+  fraseri 
+  - Coverage vs elevation 
+    ```{r}
+   plot(cover ~ elev, data = fraseri, xlab = 'Elevation',
+     ylab = 'Species Coverage')
+    ```
+    - cover vs tci
+    ```{r}
+     plot(cover ~ tci, data = fraseri, xlab = 'TCI',
+     ylab = 'Species Coverage')
+    ```
+    - cover vs streamdist 
+    ```{r}
+     plot(cover ~ streamdist, data = fraseri, xlab = 'Stream Distance',
+     ylab = 'Species Coverage')
+    ```
+    - cover vs. disturb
+    ```{r}
+     plot(cover ~ disturb, data = fraseri, xlab = 'Elevation',
+     ylab = 'Disturbance')
+    ```
+    - cover vs beers 
+    ```{r}
+     plot(cover ~ beers, data = fraseri, xlab = 'Elevation',
+     ylab = 'Beers')
+    ```
+  
+  rubrum 
+    - coverage vs elevation 
+    ```{r}
+    plot(cover ~ elev, data = rubrum, xlab = 'Elevation',
+     ylab = 'Species Coverage')
+    ```
+    - cover vs tci
+    ```{r}
+     plot(cover ~ tci, data = rubrum, xlab = 'TCI',
+     ylab = 'Species Coverage')
+    ```
+    - cover vs streamdist 
+    ```{r}
+     plot(cover ~ streamdist, data = rubrum, xlab = 'Stream Distance',
+     ylab = 'Species Coverage')
+    ```
+    - cover vs. disturb
+    ```{r}
+     plot(cover ~ disturb, data = rubrum, xlab = 'Elevation',
+     ylab = 'Disturbance')
+    ```
+    - cover vs beers 
+    ```{r}
+     plot(cover ~ beers, data = rubrum, xlab = 'Elevation',
+     ylab = 'Beers')
+    ```
+    
+   elevation model - fraseri 
+```{r}
+fcov_mod = lm(cover ~ elev, data = fraseri)
+anova(fcov_mod)
+summary(fcov_mod)
+```
+The pvalues in both the summary and anova analysis match for this model. Below I created another with multiple variables fcov stands for fraseri cover.
+   
+```{r}
+fcov_mod = lm(cover ~ elev + tci + streamdist + disturb + beers, data = fraseri)
+anova(fcov_mod)
+summary(fcov_mod)
+```
+The pvalues from the anova analysis and summary analysis vary. 
+  
+  rubrum cover
+```{r}
+rcov_mod = lm(cover ~ elev + tci + streamdist + disturb + beers, data = rubrum)
+anova(rcov_mod)
+summary(rcov_mod)
+```
+• the exploratory analysis explains cover pretty clearly. With the plots you can get a good understanding on if there is a trend or not. The Rubrum species had a highly greater amount of observations available, therefore the data for that species was very helpful
+• for the fraseri species, the elevation was the most important variable because it was the only one to show significance after analysis was performed. Potentially becaue of the larger sample size, the rubrum species had other important variables including elevation, tci, streamdist, and beers. 
+• 
+• you can definitely be able to explain varience in the rubrum species better because the sample size is many times greater than that of fraseri. 
+
+2. acer_poi = glm(cover ~ tci + elev + ... , data = my_data, 
+           family='poisson')
+           
+```{r}
+fras_poi = glm(cover ~ elev + tci + streamdist + disturb + beers, data = fraseri, family = 'poisson')
+rub_poi = glm(cover ~ elev + tci + streamdist + disturb + beers, data = rubrum, family = 'poisson')
+anova(fras_poi)
+anova(rub_poi)
+```
+
+```{r}
+pseudo_r2 = function(glm_mod) {
+                1 -  glm_mod$deviance / glm_mod$null.deviance
+}
+pseudo_r2(fras_poi)
+pseudo_r2(rub_poi)
+```
+
+
+3. The analysis was able to show how species cover is affected by elevation, TCI, stream distribution, disturbance, and beers. Since the Acer rubrum species of tree had a larger sample size, the more accurate deviance was found. The variables showed to have a more significant affect on cover, especially elevation, stream distribution, and beers. All these variables showed to have a significant affect on the tree cover. For the Abies fraseri species only elevation had a significant affect on tree cover.  
