@@ -1,0 +1,65 @@
+---
+title: "multivariate models"
+author: "Daniela Adjunta"
+date: "2/7/2019"
+output: html_document
+---
+
+```{r}
+library(vegan)
+data(dune)
+data(dune.env)
+?dune
+```
+1. 
+```{r}
+dune_mds = metaMDS(dune)
+plot(dune_mds, type='n')
+text(dune_mds, 'sp', cex=.5)
+color_vect = rev(terrain.colors(6))[-1]
+points(dune_mds, 'sites', pch=19, 
+      col=color_vect[dune.env$Moisture])
+legend('topright', paste("Moisture =", 1:5, sep=''), 
+      col=color_vect, pch=19)
+```
+An NMDS plot is used to minimize stress and maximize rank order correlation to explain the most variation. The plot seperates out moisture because this variable creates the most variation in the data, i.e. spreads it out the most. This suggests that dune vegetation is very dependent on the moisture of the environment. This variation can be seen along the x axis, but there is also notible variation along the y axis which suggest another variation is important in the variation on dune vegetation. 
+
+2. 
+```{r}
+cca_dunes = cca(dune ~ ., dune.env)
+plot(cca_dunes, type='n', scaling=1)
+orditorp(cca_dunes, display='sp', cex=0.5, scaling=1, col = 'blue')
+text(cca_dunes, display='bp', col = 'red')
+```
+```{r}
+cca_mois = cca(dune ~ Moisture, data = dune.env)
+plot(cca_mois, type='n', scaling=1)
+orditorp(cca_mois, display='sp', cex=0.5, scaling=1, col = 'blue')
+text(cca_mois, display='bp', col = 'red')
+```
+```{r}
+cca_A1 = cca(dune ~ A1, data = dune.env)
+plot(cca_A1, type='n', scaling=1)
+orditorp(cca_A1, display='sp', cex=0.5, scaling=1, col = 'blue')
+text(cca_A1, display='bp', col = 'red')
+```
+```{r}
+cca_manage = cca(dune ~ Management, data = dune.env)
+plot(cca_manage, type='n', scaling=1)
+orditorp(cca_manage, display='sp', cex=0.5, scaling=1, col = 'blue')
+text(cca_manage, display='bp', col = 'red')
+```
+```{r}
+cca_use = cca(dune ~ Use, data = dune.env)
+plot(cca_use, type='n', scaling=1)
+orditorp(cca_use, display='sp', cex=0.5, scaling=1, col = 'blue')
+text(cca_use, display='bp', col = 'red')
+```
+```{r}
+cca_man = cca(dune ~ Manure, data = dune.env)
+plot(cca_man, type='n', scaling=1)
+orditorp(cca_man, display='sp', cex=0.5, scaling=1, col = 'blue')
+text(cca_man, display='bp', col = 'red')
+```
+
+3. Both analysis suggest that moisture is an important variable for dune vegetation, especially when looking at all the variables together. Moisture in the frist analysis showed to have a great variation as well as in the second analysis where there were multiple moisture values. The second analysis, however, suggested that other variables are important in the variation of dune vegetation. Individual analysis and plots were run to note how each individual variable caused variation. After all the variables were tested, manure type and management along with moisture seemed to cause the most variation is dune vegetation. While the first led us in a good direction in understanding what variables were important, it was limiting and did not explain all the variation. 
